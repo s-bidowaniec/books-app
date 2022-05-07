@@ -57,8 +57,26 @@ const initActions = () => {
       filterBooks();
     }
   });
-  
+
 };
 
+const classifyRatings = () => {
+  dataSource.books.forEach((book)=>{
+    let gradients = '';
+    if (book.rating < 6){
+      gradients = 'to bottom,  #fefcea 0%, #f1da36 100%';
+    } else if (book.rating > 6 && book.rating<=8){
+      gradients = 'to bottom, #b4df5b 0%,#b4df5b 100%';
+    } else if (book.rating > 9 && book.rating<=9){
+      gradients = 'to bottom, #299a0b 0%, #299a0b 100%';
+    } else {
+      gradients = 'to bottom, #ff0084 0%,#ff0084 100%';
+    }
+    const ratingWidth = book.rating*10;
+
+    book.style = `background: linear-gradient(${gradients}); width: ${ratingWidth}%`;
+  });
+};
+classifyRatings();
 addBooks(dataSource.books);
 initActions();
