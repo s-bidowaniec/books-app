@@ -3,7 +3,9 @@
 const selectors = {
   'books': {
     'template': '#template-book',
-    'books': '.books-list',
+    'container': '.books-list',
+    'book': '.book',
+    'image': '.book__image',
   },
   'forms': {
     'filters': '.filters'
@@ -23,12 +25,20 @@ const addBooks = (books) => {
   }
 };
 
+const filterBooks = ()=>{
+  const domBooksContainer = document.querySelector(selectors.books.container);
+  for (const book of dataSource.books){
+    const domBook = domBooksContainer.querySelector(`[data-id="${book.id}"]`);
+    filters.every((filter)=>!book.details[filter]) ? domBook.classList.remove('hidden') : domBook.classList.add('hidden');
+  }
+};
+
 const initActions = () => {
-  const domBooks = document.querySelector(selectors.books.books);
+  const domBooksContainer = document.querySelector(selectors.books.container);
 
-  domBooks.addEventListener('click', (e)=>{e.preventDefault();});
+  domBooksContainer.addEventListener('click', (e)=>{e.preventDefault();});
 
-  domBooks.addEventListener('dblclick', (event)=>{
+  domBooksContainer.addEventListener('dblclick', (event)=>{
     event.preventDefault();
     const thisBook = event.target.parentElement.parentElement;
     if (thisBook.classList.contains('book__image')) {
@@ -44,8 +54,10 @@ const initActions = () => {
     if (clickedElement.tagName === 'INPUT' && clickedElement.type === 'checkbox' && clickedElement.name === 'filter'){
       clickedElement.checked ? filters.push(clickedElement.value) : filters.splice(filters.indexOf(clickedElement.value), 1);
       console.log(filters);
+      filterBooks();
     }
   });
+  
 };
 
 addBooks(dataSource.books);
